@@ -56,13 +56,10 @@ ByteBuffer buf = ByteBuffer.allocate();
 * 通道用于源节点与目标节点之间的连接，在java NIO中负责缓冲区的传输，Channel本身不传输数据，因此需要配合缓冲区进行传输、
 * 通道主要实现类：
 > java.nio.channels.Channel
->> FileChannel 
-
->> SocketChannel 
-
->> ServerSocketChannel
-
->> DatagramChannel
+>> FileChannel <br/>
+>> SocketChannel <br/>
+>> ServerSocketChannel<br/>
+>> DatagramChannel<br/>
 
 * 获取渠道
   * Java针对支持通道的类提供了getChannel方法
