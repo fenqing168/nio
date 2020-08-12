@@ -73,3 +73,62 @@ ByteBuffer buf = ByteBuffer.allocate();
       * DatagramSocket
   * Java 1.7 NIO 2中针对各个通道提供了静态方法Open()方法
   * Java 1.7 NIO 2中Files工具类的newByteChannel()方法
+```java
+//流方式
+public static void test1(){
+    long start = System.currentTimeMillis();
+    try (
+            FileInputStream fis = new FileInputStream("E:\\test\\test.zip");
+            FileOutputStream fos = new FileOutputStream("E:\\test\\test1.zip");
+            FileChannel inChannel = fis.getChannel();
+            FileChannel outChannel = fos.getChannel();
+    ) {
+        ByteBuffer buf = ByteBuffer.allocate(1024 * 1024 * 1024);
+        while (inChannel.read(buf) != -1){
+            buf.flip();
+            outChannel.write(buf);
+            buf.clear();
+        }
+    }catch (Exception e){
+        e.printStackTrace();
+    }
+    long end = System.currentTimeMillis();
+    System.out.println("耗时：" + (end - start));
+}
+```
+```java
+//直接缓存（内存映射文件）
+public static void test2(){
+    long start = System.currentTimeMillis();
+    try (
+            FileChannel inChannel = FileChannel.open(Paths.get("E:\\test\\test.zip"), StandardOpenOption.READ);
+            FileChannel outChannel = FileChannel.open(Paths.get("E:\\test\\test2.zip"), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.READ);
+    ) {
+        MappedByteBuffer buf = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
+        MappedByteBuffer outBuf = outChannel.map(FileChannel.MapMode.READ_WRITE, 0, inChannel.size());
+        byte[] bytes = new byte[buf.limit()];
+        buf.get(bytes);
+        outBuf.put(bytes);
+    }catch (Exception e){
+        e.printStackTrace();
+    }
+    long end = System.currentTimeMillis();
+    System.out.println("耗时：" + (end - start));
+}
+```
+```java
+//管道直接复制
+public static void test3(){
+    long start = System.currentTimeMillis();
+    try (
+            FileChannel inChannel = FileChannel.open(Paths.get("I:\\test\\test.zip"), StandardOpenOption.READ);
+            FileChannel outChannel = FileChannel.open(Paths.get("I:\\test\\test3.zip"), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.READ);
+    ) {
+        inChannel.transferTo(0, inChannel.size(), outChannel);
+    }catch (Exception e){
+        e.printStackTrace();
+    }
+    long end = System.currentTimeMillis();
+    System.out.println("耗时：" + (end - start));
+}
+```
