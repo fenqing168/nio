@@ -22,8 +22,8 @@ public class Day3 {
     public static void test1(){
         long start = System.currentTimeMillis();
         try (
-                FileInputStream fis = new FileInputStream("I:\\test\\test.zip");
-                FileOutputStream fos = new FileOutputStream("I:\\test\\test1.zip");
+                FileInputStream fis = new FileInputStream("e:\\test\\test.zip");
+                FileOutputStream fos = new FileOutputStream("e:\\test\\test1.zip");
                 FileChannel inChannel = fis.getChannel();
                 FileChannel outChannel = fos.getChannel();
         ) {
@@ -43,8 +43,8 @@ public class Day3 {
     public static void test2(){
         long start = System.currentTimeMillis();
         try (
-                FileChannel inChannel = FileChannel.open(Paths.get("I:\\test\\test.zip"), StandardOpenOption.READ);
-                FileChannel outChannel = FileChannel.open(Paths.get("I:\\test\\test2.zip"), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.READ);
+                FileChannel inChannel = FileChannel.open(Paths.get("e:\\test\\test.zip"), StandardOpenOption.READ);
+                FileChannel outChannel = FileChannel.open(Paths.get("e:\\test\\test2.zip"), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.READ);
         ) {
             MappedByteBuffer buf = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
             MappedByteBuffer outBuf = outChannel.map(FileChannel.MapMode.READ_WRITE, 0, inChannel.size());
@@ -61,8 +61,8 @@ public class Day3 {
     public static void test3(){
         long start = System.currentTimeMillis();
         try (
-                FileChannel inChannel = FileChannel.open(Paths.get("I:\\test\\test.zip"), StandardOpenOption.READ);
-                FileChannel outChannel = FileChannel.open(Paths.get("I:\\test\\test3.zip"), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.READ);
+                FileChannel inChannel = FileChannel.open(Paths.get("e:\\test\\test.zip"), StandardOpenOption.READ);
+                FileChannel outChannel = FileChannel.open(Paths.get("e:\\test\\test3.zip"), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.READ);
         ) {
             inChannel.transferTo(0, inChannel.size(), outChannel);
         }catch (Exception e){
