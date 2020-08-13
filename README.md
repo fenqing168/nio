@@ -132,3 +132,56 @@ public static void test3(){
     System.out.println("耗时：" + (end - start));
 }
 ```
+* 分散和聚集
+  * 分散：将通道中数据依次读到多个缓冲区中
+  * 聚集：将多个缓冲区中多个数据依次写入缓冲区中
+```java
+public static void test1(){
+    try (
+            RandomAccessFile in = new RandomAccessFile("E:\\test\\新建文本文档.txt", "rw");
+            RandomAccessFile out = new RandomAccessFile("E:\\test\\新建文本文档1.txt", "rw");
+            FileChannel inC = in.getChannel();
+            FileChannel outC = out.getChannel();
+    ){
+        ByteBuffer[] bufs = {ByteBuffer.allocate(10), ByteBuffer.allocate(1024)};
+        //分散
+        inC.read(bufs);
+        System.out.println(new String(bufs[0].array(), 0, bufs[0].limit()));
+        System.out.println(new String(bufs[1].array(), 0, bufs[1].limit()));
+        for (ByteBuffer buf : bufs) {
+            buf.flip();
+        }
+        //聚集
+        outC.write(bufs);
+    }catch (Exception e){
+
+    }
+
+}
+```
+
+* 字符集Charset
+  * 字符串-> 字节数组
+  * 字节数组 -> 字符串
+```java
+ public static void test2() throws CharacterCodingException {
+    String str = "奋青123";
+    Charset utf8 = StandardCharsets.UTF_8;
+    CharsetDecoder charsetDecoder = utf8.newDecoder();
+    CharsetEncoder charsetEncoder = utf8.newEncoder();
+    CharBuffer charBuffer = CharBuffer.allocate(1024);
+    charBuffer.put(str);
+    charBuffer.flip();
+    ByteBuffer encode = charsetEncoder.encode(charBuffer);
+    System.out.println(Arrays.toString(encode.array()));
+    CharBuffer decode = charsetDecoder.decode(encode);
+    System.out.println(decode);
+    encode.flip();
+    Charset gbk = Charset.forName("GBK");
+    System.out.println(gbk.newDecoder().decode(encode));
+    charBuffer.clear();
+    charBuffer.put(str);
+    charBuffer.flip();
+    System.out.println(Arrays.toString(gbk.newEncoder().encode(charBuffer).array()));
+}
+```
